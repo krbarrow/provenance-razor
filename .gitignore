@@ -1,0 +1,8 @@
+# notebook/scratch artifacts
+*.zip
+flatc_bin/
+flatc
+provenance-razor/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
