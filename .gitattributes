@@ -1,0 +1,6 @@
+# Keep vector bytes stable across platforms (MANIFEST.json hashes them)
+tests/** -text
+*.bin binary
+*.py text eol=lf
+*.mjs text eol=lf
+*.md text eol=lf

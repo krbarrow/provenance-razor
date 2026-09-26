@@ -1,0 +1,152 @@
+// Provenance Razor Control Specification 0.3.0-alpha — TRANSPORT SCHEMA (FlatBuffers)
+//
+// STATUS: provisional, transport only. Compiled with flatc 24.3.25 and round-trip tested by
+// tools/transport_roundtrip.py (canonical -> FlatBuffers JSON -> binary -> JSON -> canonical).
+//
+// FlatBuffers byte layout depends on builder order, alignment and vtable sharing, so buffers are
+// never hashed or signed. Verifiers convert to the canonical object and hash PRC-LP-0, exactly as
+// described in schema/protobuf/provenance_razor_v1alpha3.proto. Field meanings, units and
+// constraints are identical to the Protobuf schema; see the comments there.
+namespace Provenance.Razor.V1Alpha3;
+
+enum AuthorizationMode : byte { UNSPECIFIED = 0, AUTOMATED = 1, MANUAL = 2 }
+enum DecisionOutcome : byte { UNSPECIFIED = 0, ALLOW = 1, DENY = 2 }
+enum AdverseDisposition : byte { UNSPECIFIED = 0, CLEAR = 1, CONTAIN = 2 }
+enum ExecutionStatus : byte { UNSPECIFIED = 0, COMMITTED = 1, ROLLED_BACK = 2, REJECTED = 3, INDETERMINATE = 4, UNRESOLVED = 5 }
+enum FailurePhase : byte { UNSPECIFIED = 0, NONE = 1, PREPARE = 2, PRECONDITION = 3, DISPATCH = 4, TARGET = 5, RECONCILIATION = 6 }
+
+// Lossless canonical value (PRC-LP-0 type system)
+table NullValue {}
+table BoolValue { value: bool; }
+table IntValue { value: long; }
+table F64Bits { bits: ulong; }
+table StringValue { value: string (required); }
+table BytesValue { value: [ubyte] (required); }
+table ValueList { items: [Value] (required); }
+table MapEntry { key: string (required); value: Value (required); }
+table ValueMap { entries: [MapEntry] (required); }
+union ValueKind { NullValue, BoolValue, IntValue, F64Bits, StringValue, BytesValue, ValueList, ValueMap }
+table Value { kind: ValueKind (required); }
+
+table ExternalApproval {
+  domain: string (required);
+  schema_ver: string (required);
+  approval_id: string (required);
+  approval_key_id: string (required);
+  approval_trust_epoch: string (required);
+  authority_class: string (required);
+  authority_scope: string (required);
+  x: Value (required);
+  a: Value (required);
+  target: string (required);
+  state_ver: long;
+  control_profile_hash: [ubyte] (required);  // exactly 32 bytes
+  tau_issued: long;
+  tau_expiry: long;
+  decision: DecisionOutcome;
+  actor: Value (required);
+  req_id: string (required);
+  capability_id: string (required);
+  scoring_profile_hash: [ubyte] (required);
+  trust_state_hash: [ubyte] (required);
+  adverse_disposition: AdverseDisposition;
+  containment_digest: [ubyte] (required);
+}
+
+table DecisionCapability {
+  domain: string (required);
+  schema_ver: string (required);
+  profile_version: string (required);
+  lineage_schema_version: string (required);
+  capability_id: string (required);
+  req_id: string (required);
+  evidence_snapshot_id: string (required);
+  actor: Value (required);
+  auth_mode: AuthorizationMode;
+  x: Value (required);
+  a: Value (required);
+  target: string (required);
+  state_ver: long;
+  control_profile_hash: [ubyte] (required);  // exactly 32 bytes
+  evidence_hash: [ubyte] (required);     // exactly 32 bytes
+  lineage_hash: [ubyte] (required);      // exactly 32 bytes
+  approval_hash: [ubyte] (required);     // exactly 32 bytes
+  decision_key_id: string (required);
+  decision_trust_epoch: string (required);
+  tau_eval: long;
+  tau_expiry: long;
+  decision: DecisionOutcome;
+  reason_codes: long;                    // non-negative; bit 63 reserved
+  scoring_profile_hash: [ubyte] (required);
+  trust_state_hash: [ubyte] (required);
+  adverse_disposition: AdverseDisposition;
+  containment_digest: [ubyte] (required);
+  eval_clock_id: string (required);
+}
+
+table OptionalLong { value: long; }      // absent table = unknown
+
+table ExecutionReceipt {
+  domain: string (required);
+  schema_ver: string (required);
+  receipt_id: string (required);
+  capability_id: string (required);
+  req_id: string (required);
+  decision_digest: [ubyte] (required);   // exactly 32 bytes
+  x: Value (required);
+  target: string (required);
+  control_profile_hash: [ubyte] (required);  // exactly 32 bytes
+  execution_status: ExecutionStatus;
+  failure_phase: FailurePhase;
+  reason_code: long;
+  reconciliation_required: bool;
+  pre_state_digest: [ubyte] (required);  // exactly 32 bytes
+  post_state_digest: [ubyte] (required); // exactly 32 bytes
+  tau_dispatch: long;
+  tau_finalized: long;
+  receipt_key_id: string (required);
+  receipt_trust_epoch: string (required);
+  expected_state_ver: long;
+  observed_pre_state_ver: long;
+  observed_post_state_ver: OptionalLong; // absent = unknown (UNRESOLVED)
+}
+
+table ProvenanceAtom { dependency_type: string (required); dependency_id: string (required); }
+
+table ProvenanceAttestation {
+  domain: string (required);
+  schema_ver: string (required);
+  attestation_id: string (required);
+  provenance_key_id: string (required);
+  provenance_trust_epoch: string (required);
+  attester_id: string (required);
+  evidence_digest: [ubyte] (required);   // exactly 32 bytes
+  dependencies: [ProvenanceAtom] (required);
+  tau_issued: long;
+  tau_expiry: long;
+}
+
+table ManifestMember { evidence_id: string (required); evidence_digest: [ubyte] (required); parent_id: string; }
+
+table FamilyManifest {
+  domain: string (required);
+  schema_ver: string (required);
+  manifest_id: string (required);
+  membership_key_id: string (required);
+  membership_trust_epoch: string (required);
+  authority_id: string (required);
+  family_id: string (required);
+  ingress_channel: string (required);
+  members: [ManifestMember] (required);
+  tau_issued: long;
+  tau_expiry: long;
+}
+
+// Detached signatures
+table SignedApproval { payload: ExternalApproval (required); signature: [ubyte] (required); }
+table SignedDecision { payload: DecisionCapability (required); signature: [ubyte] (required); }
+table SignedReceipt { payload: ExecutionReceipt (required); signature: [ubyte] (required); }
+table SignedProvenanceAttestation { payload: ProvenanceAttestation (required); signature: [ubyte] (required); }
+table SignedFamilyManifest { payload: FamilyManifest (required); signature: [ubyte] (required); }
+
+root_type SignedDecision;

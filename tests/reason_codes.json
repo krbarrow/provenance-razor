@@ -1,0 +1,263 @@
+{
+  "spec_version": "0.3.0-alpha",
+  "status": "provisional (A-03)",
+  "encoding": "non-negative int64 bitfield; bit 63 is reserved and must be zero (a mask with it set is negative in int64 and fails CanonicalObjectValid)",
+  "bits": [
+    {
+      "bit": 0,
+      "name": "DECODE_INVALID",
+      "mask": "1"
+    },
+    {
+      "bit": 1,
+      "name": "SIGNATURE_INVALID",
+      "mask": "2"
+    },
+    {
+      "bit": 2,
+      "name": "DOMAIN_MISMATCH",
+      "mask": "4"
+    },
+    {
+      "bit": 3,
+      "name": "ACTION_MISMATCH",
+      "mask": "8"
+    },
+    {
+      "bit": 4,
+      "name": "ASSERTION_MISMATCH",
+      "mask": "16"
+    },
+    {
+      "bit": 5,
+      "name": "TARGET_MISMATCH",
+      "mask": "32"
+    },
+    {
+      "bit": 6,
+      "name": "STATE_VERSION_MISMATCH",
+      "mask": "64"
+    },
+    {
+      "bit": 7,
+      "name": "PROFILE_HASH_MISMATCH",
+      "mask": "128"
+    },
+    {
+      "bit": 8,
+      "name": "EVIDENCE_HASH_MISMATCH",
+      "mask": "256"
+    },
+    {
+      "bit": 9,
+      "name": "LINEAGE_HASH_MISMATCH",
+      "mask": "512"
+    },
+    {
+      "bit": 10,
+      "name": "DECISION_NOT_ALLOW",
+      "mask": "1024"
+    },
+    {
+      "bit": 11,
+      "name": "NOT_YET_VALID",
+      "mask": "2048"
+    },
+    {
+      "bit": 12,
+      "name": "EXPIRED_CAPABILITY",
+      "mask": "4096"
+    },
+    {
+      "bit": 13,
+      "name": "EVAL_SKEW_EXCEEDED",
+      "mask": "8192"
+    },
+    {
+      "bit": 14,
+      "name": "DECISION_KEY_UNAUTHORIZED",
+      "mask": "16384"
+    },
+    {
+      "bit": 15,
+      "name": "CAPABILITY_UNAVAILABLE",
+      "mask": "32768"
+    },
+    {
+      "bit": 16,
+      "name": "AUTH_MODE_INVALID",
+      "mask": "65536"
+    },
+    {
+      "bit": 17,
+      "name": "APPROVAL_SIGNATURE_INVALID",
+      "mask": "131072"
+    },
+    {
+      "bit": 18,
+      "name": "APPROVAL_DOMAIN_MISMATCH",
+      "mask": "262144"
+    },
+    {
+      "bit": 19,
+      "name": "APPROVAL_KEY_UNAUTHORIZED",
+      "mask": "524288"
+    },
+    {
+      "bit": 20,
+      "name": "APPROVAL_SCOPE_DENIED",
+      "mask": "1048576"
+    },
+    {
+      "bit": 21,
+      "name": "APPROVAL_BINDING_MISMATCH",
+      "mask": "2097152"
+    },
+    {
+      "bit": 22,
+      "name": "APPROVAL_EXPIRED",
+      "mask": "4194304"
+    },
+    {
+      "bit": 23,
+      "name": "APPROVAL_CONSUMED",
+      "mask": "8388608"
+    },
+    {
+      "bit": 24,
+      "name": "APPROVAL_HASH_MISMATCH",
+      "mask": "16777216"
+    },
+    {
+      "bit": 25,
+      "name": "SAFE_STATE_LOCK",
+      "mask": "33554432"
+    },
+    {
+      "bit": 26,
+      "name": "THRESHOLD_NOT_MET",
+      "mask": "67108864"
+    },
+    {
+      "bit": 27,
+      "name": "FAMILY_INVALIDATED",
+      "mask": "134217728"
+    },
+    {
+      "bit": 28,
+      "name": "NO_ELIGIBLE_EVIDENCE",
+      "mask": "268435456"
+    },
+    {
+      "bit": 29,
+      "name": "CAS_PRECONDITION_FAILED",
+      "mask": "536870912"
+    },
+    {
+      "bit": 30,
+      "name": "TARGET_REJECTED",
+      "mask": "1073741824"
+    },
+    {
+      "bit": 31,
+      "name": "DISPATCH_TIMEOUT",
+      "mask": "2147483648"
+    },
+    {
+      "bit": 32,
+      "name": "RECONCILIATION_UNRESOLVED",
+      "mask": "4294967296"
+    },
+    {
+      "bit": 33,
+      "name": "LINEAGE_CLASS_MALFORMED",
+      "mask": "8589934592"
+    },
+    {
+      "bit": 34,
+      "name": "CONSEQUENCE_CLASS_UNDEFINED",
+      "mask": "17179869184"
+    },
+    {
+      "bit": 35,
+      "name": "NONFINITE_INPUT",
+      "mask": "34359738368"
+    },
+    {
+      "bit": 36,
+      "name": "APPROVAL_SUBJECT_MISMATCH",
+      "mask": "68719476736"
+    },
+    {
+      "bit": 37,
+      "name": "APPROVAL_NOT_YET_VALID",
+      "mask": "137438953472"
+    },
+    {
+      "bit": 38,
+      "name": "DEFEATER_PRESENT",
+      "mask": "274877906944"
+    },
+    {
+      "bit": 39,
+      "name": "PROVENANCE_TAMPERED",
+      "mask": "549755813888"
+    },
+    {
+      "bit": 40,
+      "name": "OBJECT_SCHEMA_INVALID",
+      "mask": "1099511627776"
+    },
+    {
+      "bit": 41,
+      "name": "APPROVAL_SCHEMA_INVALID",
+      "mask": "2199023255552"
+    },
+    {
+      "bit": 42,
+      "name": "TRUST_STATE_MISMATCH",
+      "mask": "4398046511104"
+    },
+    {
+      "bit": 43,
+      "name": "SCORING_PROFILE_MISMATCH",
+      "mask": "8796093022208"
+    },
+    {
+      "bit": 44,
+      "name": "ADVERSE_DISPOSITION_MISMATCH",
+      "mask": "17592186044416"
+    },
+    {
+      "bit": 45,
+      "name": "ADVERSE_CONTAINMENT",
+      "mask": "35184372088832"
+    },
+    {
+      "bit": 46,
+      "name": "CLOCK_UNTRUSTED",
+      "mask": "70368744177664"
+    },
+    {
+      "bit": 47,
+      "name": "MEMBERSHIP_UNVERIFIED",
+      "mask": "140737488355328"
+    },
+    {
+      "bit": 48,
+      "name": "MEMBERSHIP_TAMPERED",
+      "mask": "281474976710656"
+    },
+    {
+      "bit": 49,
+      "name": "VERIFIER_FAULT",
+      "mask": "562949953421312"
+    }
+  ],
+  "reserved": [
+    {
+      "bit": 63,
+      "reason": "sign bit of int64"
+    }
+  ]
+}

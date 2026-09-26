@@ -1,0 +1,237 @@
+// Provenance Razor Control Specification 0.3.0-alpha — TRANSPORT SCHEMA
+//
+// STATUS: provisional, transport and storage only.
+//
+// These messages define structure, types and field presence for moving objects between
+// systems. They do NOT define the bytes that are hashed or signed. Protobuf serialization is
+// not canonical: field order, merged/repeated fields, default-value omission and unknown
+// fields all allow several valid encodings of one message.
+//
+// Canonical representation (normative): PRC-LP-0 over the canonical object
+//     H(z) = SHA-256(PRC-LP-0(z))          sigma = Ed25519(sk, H(z))
+//
+// Verifier flow:
+//     receive protobuf -> parse -> REJECT unknown fields -> validate presence/lengths/enums
+//     -> convert to the canonical object -> PRC-LP-0 -> SHA-256 -> verify detached signature
+// Never hash or verify protobuf bytes. Never re-serialize protobuf and compare.
+//
+// Signatures are detached: every signed object travels as Signed*{payload, signature}; the
+// signature is never a field of the payload it signs.
+//
+// Changes in v1alpha3 (spec 0.3.0-alpha):
+//   * profile_hash renamed control_profile_hash (same field numbers: wire-compatible rename)
+//   * scoring_profile_hash, trust_state_hash, adverse_disposition, containment_digest on p and d;
+//     eval_clock_id on d
+//   * FamilyManifest (M-1) and SignedFamilyManifest
+//   * reason masks are non-negative: bit 63 is reserved
+//
+// Changes from the v1alpha1 draft (in v1alpha2):
+//   * signature fields moved out of payloads into Signed* wrappers
+//   * x, a and actor carried as lossless canonical Values (not "canonical strings")
+//   * approval bound to actor, req_id, capability_id (spec 0.3.0 §3.1; closes G-01..G-03)
+//   * receipt separates expected from observed state versions (spec 0.3.0 §4.3, R-1)
+//   * ProvenanceAttestation and the K_provenance domain (spec 0.3.0 §2.4, P-1)
+//   * integers are int64 to match PRC-LP-0's int64; timestamps are int64 microseconds UTC
+//   * new fields take new numbers; nothing is renumbered
+syntax = "proto3";
+
+package provenance.razor.v1alpha3;
+
+option go_package = "provenance/razor/v1alpha3;razorv1alpha3";
+option java_package = "com.provenance.razor.v1alpha3";
+
+// ---------------------------------------------------------------------------
+// Lossless canonical value (mirrors the PRC-LP-0 type system exactly)
+// ---------------------------------------------------------------------------
+message Value {
+  oneof kind {
+    bool null_value = 1;          // presence (with value true) means PRC-LP-0 null
+    bool bool_value = 2;
+    sint64 int_value = 3;         // PRC-LP-0 int (int64)
+    fixed64 f64_bits = 4;         // PRC-LP-0 f64: raw IEEE 754 bit pattern, never a decimal
+    string string_value = 5;      // valid UTF-8, not normalised
+    bytes bytes_value = 6;
+    ValueList list_value = 7;
+    ValueMap map_value = 8;
+  }
+}
+message ValueList { repeated Value items = 1; }
+message ValueMap { repeated MapEntry entries = 1; }   // keys must be unique; order is irrelevant
+message MapEntry { string key = 1; Value value = 2; }
+
+enum AuthorizationMode {
+  AUTHORIZATION_MODE_UNSPECIFIED = 0;   // always rejected
+  AUTHORIZATION_MODE_AUTOMATED = 1;
+  AUTHORIZATION_MODE_MANUAL = 2;
+}
+enum DecisionOutcome {
+  DECISION_OUTCOME_UNSPECIFIED = 0;     // always rejected
+  DECISION_OUTCOME_ALLOW = 1;
+  DECISION_OUTCOME_DENY = 2;            // representable, never valid in d or p
+}
+enum AdverseDisposition {
+  ADVERSE_DISPOSITION_UNSPECIFIED = 0;  // always rejected
+  ADVERSE_DISPOSITION_CLEAR = 1;
+  ADVERSE_DISPOSITION_CONTAIN = 2;      // decision must be MANUAL with an approval acknowledging containment_digest
+}
+enum ExecutionStatus {
+  EXECUTION_STATUS_UNSPECIFIED = 0;
+  EXECUTION_STATUS_COMMITTED = 1;
+  EXECUTION_STATUS_ROLLED_BACK = 2;
+  EXECUTION_STATUS_REJECTED = 3;
+  EXECUTION_STATUS_INDETERMINATE = 4;
+  EXECUTION_STATUS_UNRESOLVED = 5;
+}
+enum FailurePhase {
+  FAILURE_PHASE_UNSPECIFIED = 0;        // always rejected (NONE is explicit)
+  FAILURE_PHASE_NONE = 1;
+  FAILURE_PHASE_PREPARE = 2;
+  FAILURE_PHASE_PRECONDITION = 3;
+  FAILURE_PHASE_DISPATCH = 4;
+  FAILURE_PHASE_TARGET = 5;
+  FAILURE_PHASE_RECONCILIATION = 6;
+}
+
+// ---------------------------------------------------------------------------
+// §3.1 External manual approval (p). Domain "PROVENANCE-RAZOR-APPROVAL-V0.3.0-Alpha"
+// ---------------------------------------------------------------------------
+message ExternalApproval {
+  string domain = 1;
+  string schema_ver = 2;
+  string approval_id = 3;             // UUIDv7
+  string approval_key_id = 4;         // key in the K_approval domain
+  string approval_trust_epoch = 5;
+  string authority_class = 6;
+  string authority_scope = 7;
+  Value x = 8;                        // CanonicalAction(x)
+  Value a = 9;                        // CanonicalAssertion(a)
+  string target = 10;                 // must equal d.target and CurrentTarget
+  int64 state_ver = 11;
+  bytes control_profile_hash = 12;    // exactly 32 bytes, SHA-256 (renamed from profile_hash)
+  int64 tau_issued = 13;              // µs UTC; must satisfy tau_issued <= d.tau_eval
+  int64 tau_expiry = 14;              // µs UTC
+  DecisionOutcome decision = 15;      // must be ALLOW
+  Value actor = 16;                   // must equal d.actor            (new in 0.2.0)
+  string req_id = 17;                 // must equal d.req_id           (new in 0.2.0)
+  string capability_id = 18;          // must equal d.capability_id    (new in 0.2.0; pre-allocated at request time)
+  bytes scoring_profile_hash = 19;    // must equal d.scoring_profile_hash (new in 0.3.0)
+  bytes trust_state_hash = 20;        // must equal d.trust_state_hash     (new in 0.3.0)
+  AdverseDisposition adverse_disposition = 21;  // acknowledged disposition (new in 0.3.0)
+  bytes containment_digest = 22;      // acknowledged adverse claims; exactly 32 bytes (new in 0.3.0)
+}
+
+// ---------------------------------------------------------------------------
+// §3.3 Decision capability (d). Domain "PROVENANCE-RAZOR-DECISION-V0.3.0-Alpha"
+// ---------------------------------------------------------------------------
+message DecisionCapability {
+  string domain = 1;
+  string schema_ver = 2;
+  string profile_version = 3;
+  string lineage_schema_version = 4;
+  string capability_id = 5;           // UUIDv7
+  string req_id = 6;                  // UUIDv7
+  string evidence_snapshot_id = 7;    // UUIDv7
+  Value actor = 8;                    // ActorIdentity
+  AuthorizationMode auth_mode = 9;
+  Value x = 10;
+  Value a = 11;
+  string target = 12;
+  int64 state_ver = 13;
+  bytes control_profile_hash = 14;    // exactly 32 bytes (renamed from profile_hash)
+  bytes evidence_hash = 15;           // exactly 32 bytes, H(F_eligible)
+  bytes lineage_hash = 16;            // exactly 32 bytes, H(D_{x,a})
+  bytes approval_hash = 17;           // exactly 32 bytes, H(p) or NULL_APPROVAL_DIGEST
+  string decision_key_id = 18;        // key in the K_decision domain
+  string decision_trust_epoch = 19;
+  int64 tau_eval = 20;                // µs UTC
+  int64 tau_expiry = 21;              // µs UTC
+  DecisionOutcome decision = 22;      // must be ALLOW
+  int64 reason_codes = 23;            // reason-code bitfield; non-negative, bit 63 reserved
+  bytes scoring_profile_hash = 24;    // exactly 32 bytes (new in 0.3.0)
+  bytes trust_state_hash = 25;        // exactly 32 bytes (new in 0.3.0)
+  AdverseDisposition adverse_disposition = 26;  // CLEAR | CONTAIN (new in 0.3.0)
+  bytes containment_digest = 27;      // exactly 32 bytes; NULL_CONTAINMENT_DIGEST when CLEAR (new in 0.3.0)
+  string eval_clock_id = 28;          // registered clock authority of the evaluator (new in 0.3.0, C-1)
+}
+
+// ---------------------------------------------------------------------------
+// §4.3 Execution receipt (r). Domain "PROVENANCE-RAZOR-RECEIPT-V0.3.0-Alpha"
+// ---------------------------------------------------------------------------
+message ExecutionReceipt {
+  string domain = 1;
+  string schema_ver = 2;
+  string receipt_id = 3;
+  string capability_id = 4;
+  string req_id = 5;
+  bytes decision_digest = 6;          // exactly 32 bytes, H(d)
+  Value x = 7;
+  string target = 8;
+  bytes control_profile_hash = 9;     // exactly 32 bytes (renamed from profile_hash)
+  // 10, 11 were pre_state_ver / post_state_ver in v1alpha1 and could contradict the digests.
+  reserved 10, 11;
+  reserved "pre_state_ver", "post_state_ver";
+  ExecutionStatus execution_status = 12;
+  FailurePhase failure_phase = 13;
+  int64 reason_code = 14;
+  bool reconciliation_required = 15;
+  bytes pre_state_digest = 16;        // exactly 32 bytes, H(State_pre as observed)
+  bytes post_state_digest = 17;       // exactly 32 bytes, H(State_post) if known, else NULL_STATE_DIGEST
+  int64 tau_dispatch = 18;
+  int64 tau_finalized = 19;
+  string receipt_key_id = 20;         // key in the K_receipt domain
+  string receipt_trust_epoch = 21;
+  int64 expected_state_ver = 22;               // d.state_ver                       (R-1)
+  int64 observed_pre_state_ver = 23;           // State_pre.version                 (R-1)
+  optional int64 observed_post_state_ver = 24; // absent = unknown (UNRESOLVED)     (R-1)
+}
+
+// ---------------------------------------------------------------------------
+// §2.4 Provenance attestation (P-1). Domain "PROVENANCE-RAZOR-PROVENANCE-V0.3.0-Alpha"
+// ---------------------------------------------------------------------------
+message ProvenanceAtom {
+  string dependency_type = 1;         // SOURCE | DATABASE | COLLECTOR | RUNTIME | CLOCK | NETWORK_AS | TRUST_ROOT | API_ENDPOINT
+  string dependency_id = 2;           // canonical id; canonical form is "TYPE:id"
+}
+message ProvenanceAttestation {
+  string domain = 1;
+  string schema_ver = 2;
+  string attestation_id = 3;          // UUIDv7
+  string provenance_key_id = 4;       // key in the K_provenance domain
+  string provenance_trust_epoch = 5;
+  string attester_id = 6;             // must be the key's registered owner; must differ from the evidence producer
+  bytes evidence_digest = 7;          // exactly 32 bytes, H(EvidenceCore(e))
+  repeated ProvenanceAtom dependencies = 8;  // canonical form sorts by "TYPE:id" (UTF-8) and forbids duplicates
+  int64 tau_issued = 9;
+  int64 tau_expiry = 10;
+}
+
+// ---------------------------------------------------------------------------
+// §2.6 Family manifest (M-1). Domain "PROVENANCE-RAZOR-MEMBERSHIP-V0.3.0-Alpha"
+// ---------------------------------------------------------------------------
+message ManifestMember {
+  string evidence_id = 1;
+  bytes evidence_digest = 2;          // exactly 32 bytes, H(EvidenceCore(e))
+  optional string parent_id = 3;      // absent = root
+}
+message FamilyManifest {
+  string domain = 1;
+  string schema_ver = 2;
+  string manifest_id = 3;             // UUIDv7
+  string membership_key_id = 4;       // key in the K_membership domain
+  string membership_trust_epoch = 5;
+  string authority_id = 6;            // the key's registered owner
+  string family_id = 7;
+  string ingress_channel = 8;
+  repeated ManifestMember members = 9;  // canonical form sorts by evidence_id (UTF-8), unique
+  int64 tau_issued = 10;
+  int64 tau_expiry = 11;
+}
+
+// ---------------------------------------------------------------------------
+// Detached signatures: Ed25519 over SHA-256(PRC-LP-0(canonical(payload))), 64 bytes.
+// ---------------------------------------------------------------------------
+message SignedApproval { ExternalApproval payload = 1; bytes signature = 2; }
+message SignedDecision { DecisionCapability payload = 1; bytes signature = 2; }
+message SignedReceipt { ExecutionReceipt payload = 1; bytes signature = 2; }
+message SignedProvenanceAttestation { ProvenanceAttestation payload = 1; bytes signature = 2; }
+message SignedFamilyManifest { FamilyManifest payload = 1; bytes signature = 2; }

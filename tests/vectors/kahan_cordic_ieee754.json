@@ -1,0 +1,498 @@
+{
+  "vector_set": "numerical-ieee754",
+  "spec_version": "0.3.0-alpha",
+  "binary_file": "kahan_cordic_ieee754.bin",
+  "binary_sha256": "613d113d11beb919c3a1adb0fccd4c42a2538c780a987eefc3af0ddf279cdb1d",
+  "binary_layout": {
+    "header": "magic 'PRNV' | u16 version=1 | u16 reserved=0 | u32 record_count  (little-endian)",
+    "record": "u8 op (1=AUTH_CHECK, 2=KAHAN_SUM) | u8 flags (bit0 result, bit1 safe_state_lock) | u16 reserved=0 | u32 n | n x u64 input bit patterns | u64 expected output bits",
+    "AUTH_CHECK": "inputs [C, T]; output = effective C after §2.3 handling",
+    "KAHAN_SUM": "informative harness op (not in spec text); output = compensated sum"
+  },
+  "cordic": "No CORDIC vectors: the specification does not define a CORDIC operation (see A-06).",
+  "cases": [
+    {
+      "id": "above_threshold",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "3fe8000000000000",
+        "3fe6666666666666"
+      ],
+      "inputs_repr": [
+        "0.75",
+        "0.7"
+      ],
+      "expected": {
+        "result": true,
+        "output_bits": "3fe8000000000000",
+        "output_repr": "0.75",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": ""
+    },
+    {
+      "id": "equal_threshold",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "3fe6666666666666",
+        "3fe6666666666666"
+      ],
+      "inputs_repr": [
+        "0.7",
+        "0.7"
+      ],
+      "expected": {
+        "result": true,
+        "output_bits": "3fe6666666666666",
+        "output_repr": "0.7",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": ">= is inclusive"
+    },
+    {
+      "id": "one_ulp_below",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "3fe6666666666665",
+        "3fe6666666666666"
+      ],
+      "inputs_repr": [
+        "0.6999999999999998",
+        "0.7"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "3fe6666666666665",
+        "output_repr": "0.6999999999999998",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": "no epsilon tolerance"
+    },
+    {
+      "id": "sum_0.1_0.2_vs_0.3",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "3fd3333333333334",
+        "3fd3333333333333"
+      ],
+      "inputs_repr": [
+        "0.30000000000000004",
+        "0.3"
+      ],
+      "expected": {
+        "result": true,
+        "output_bits": "3fd3333333333334",
+        "output_repr": "0.30000000000000004",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": "0.1+0.2 = 0.30000000000000004 > 0.3"
+    },
+    {
+      "id": "0.3_vs_sum_0.1_0.2",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "3fd3333333333333",
+        "3fd3333333333334"
+      ],
+      "inputs_repr": [
+        "0.3",
+        "0.30000000000000004"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "3fd3333333333333",
+        "output_repr": "0.3",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": ""
+    },
+    {
+      "id": "neg_zero_normalised",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "8000000000000000",
+        "0000000000000000"
+      ],
+      "inputs_repr": [
+        "-0.0",
+        "0.0"
+      ],
+      "expected": {
+        "result": true,
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": "-0.0 -> +0.0"
+    },
+    {
+      "id": "threshold_neg_zero",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "0000000000000000",
+        "8000000000000000"
+      ],
+      "inputs_repr": [
+        "0.0",
+        "-0.0"
+      ],
+      "expected": {
+        "result": true,
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": ""
+    },
+    {
+      "id": "min_subnormal_preserved",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "0000000000000001",
+        "0000000000000000"
+      ],
+      "inputs_repr": [
+        "5e-324",
+        "0.0"
+      ],
+      "expected": {
+        "result": true,
+        "output_bits": "0000000000000001",
+        "output_repr": "5e-324",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": "no flush-to-zero"
+    },
+    {
+      "id": "subnormal_order",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "0000000000000001",
+        "0000000000000002"
+      ],
+      "inputs_repr": [
+        "5e-324",
+        "1e-323"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "0000000000000001",
+        "output_repr": "5e-324",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": "5e-324 < 1e-323"
+    },
+    {
+      "id": "max_subnormal_vs_min_normal",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "000fffffffffffff",
+        "0010000000000000"
+      ],
+      "inputs_repr": [
+        "2.225073858507201e-308",
+        "2.2250738585072014e-308"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "000fffffffffffff",
+        "output_repr": "2.225073858507201e-308",
+        "safe_state_lock": false
+      },
+      "normative": true,
+      "note": ""
+    },
+    {
+      "id": "quiet_nan",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "7ff8000000000000",
+        "3fe0000000000000"
+      ],
+      "inputs_repr": [
+        "nan",
+        "0.5"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": true
+      },
+      "normative": true,
+      "note": "C forced to 0.0, State 2"
+    },
+    {
+      "id": "signaling_nan",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "7ff0000000000001",
+        "0000000000000000"
+      ],
+      "inputs_repr": [
+        "nan",
+        "0.0"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": true
+      },
+      "normative": true,
+      "note": "lock denies even though 0.0 >= 0.0 (A-05)"
+    },
+    {
+      "id": "negative_nan",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "fff8000000000000",
+        "3fe0000000000000"
+      ],
+      "inputs_repr": [
+        "nan",
+        "0.5"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": true
+      },
+      "normative": true,
+      "note": ""
+    },
+    {
+      "id": "pos_inf",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "7ff0000000000000",
+        "3fe0000000000000"
+      ],
+      "inputs_repr": [
+        "inf",
+        "0.5"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": true
+      },
+      "normative": true,
+      "note": "Inf is an exception, not 'very high'"
+    },
+    {
+      "id": "neg_inf",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "fff0000000000000",
+        "3fe0000000000000"
+      ],
+      "inputs_repr": [
+        "-inf",
+        "0.5"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": true
+      },
+      "normative": true,
+      "note": ""
+    },
+    {
+      "id": "nan_threshold",
+      "op": "AUTH_CHECK",
+      "inputs_bits": [
+        "3feccccccccccccd",
+        "7ff8000000000000"
+      ],
+      "inputs_repr": [
+        "0.9",
+        "nan"
+      ],
+      "expected": {
+        "result": false,
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": true
+      },
+      "normative": true,
+      "note": "A-04: exceptional T also locks"
+    },
+    {
+      "id": "kahan_small_terms",
+      "op": "KAHAN_SUM",
+      "inputs_bits": [
+        "3ff0000000000000",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc",
+        "3c9cd2b297d889bc"
+      ],
+      "inputs_repr": [
+        "1.0",
+        "1e-16",
+        "1e-16",
+        "1e-16",
+        "1e-16",
+        "1e-16",
+        "1e-16",
+        "1e-16",
+        "1e-16",
+        "1e-16",
+        "1e-16"
+      ],
+      "expected": {
+        "output_bits": "3ff0000000000005",
+        "output_repr": "1.000000000000001",
+        "safe_state_lock": false
+      },
+      "normative": false,
+      "note": "naive left-to-right sum returns exactly 1.0"
+    },
+    {
+      "id": "kahan_tenths",
+      "op": "KAHAN_SUM",
+      "inputs_bits": [
+        "3fb999999999999a",
+        "3fb999999999999a",
+        "3fb999999999999a",
+        "3fb999999999999a",
+        "3fb999999999999a",
+        "3fb999999999999a",
+        "3fb999999999999a",
+        "3fb999999999999a",
+        "3fb999999999999a",
+        "3fb999999999999a"
+      ],
+      "inputs_repr": [
+        "0.1",
+        "0.1",
+        "0.1",
+        "0.1",
+        "0.1",
+        "0.1",
+        "0.1",
+        "0.1",
+        "0.1",
+        "0.1"
+      ],
+      "expected": {
+        "output_bits": "3ff0000000000000",
+        "output_repr": "1.0",
+        "safe_state_lock": false
+      },
+      "normative": false,
+      "note": "naive sum gives 0.9999999999999999"
+    },
+    {
+      "id": "kahan_neg_zeros",
+      "op": "KAHAN_SUM",
+      "inputs_bits": [
+        "8000000000000000",
+        "8000000000000000"
+      ],
+      "inputs_repr": [
+        "-0.0",
+        "-0.0"
+      ],
+      "expected": {
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": false
+      },
+      "normative": false,
+      "note": "-0.0 result normalised"
+    },
+    {
+      "id": "kahan_subnormals",
+      "op": "KAHAN_SUM",
+      "inputs_bits": [
+        "0000000000000001",
+        "0000000000000001",
+        "0000000000000001"
+      ],
+      "inputs_repr": [
+        "5e-324",
+        "5e-324",
+        "5e-324"
+      ],
+      "expected": {
+        "output_bits": "0000000000000003",
+        "output_repr": "1.5e-323",
+        "safe_state_lock": false
+      },
+      "normative": false,
+      "note": "subnormals preserved"
+    },
+    {
+      "id": "kahan_empty",
+      "op": "KAHAN_SUM",
+      "inputs_bits": [],
+      "inputs_repr": [],
+      "expected": {
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": false
+      },
+      "normative": false,
+      "note": ""
+    },
+    {
+      "id": "kahan_overflow",
+      "op": "KAHAN_SUM",
+      "inputs_bits": [
+        "7fe1ccf385ebc8a0",
+        "7fe1ccf385ebc8a0"
+      ],
+      "inputs_repr": [
+        "1e+308",
+        "1e+308"
+      ],
+      "expected": {
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": true
+      },
+      "normative": false,
+      "note": "intermediate Inf -> lock"
+    },
+    {
+      "id": "kahan_nan_input",
+      "op": "KAHAN_SUM",
+      "inputs_bits": [
+        "3ff0000000000000",
+        "7ff8000000000000"
+      ],
+      "inputs_repr": [
+        "1.0",
+        "nan"
+      ],
+      "expected": {
+        "output_bits": "0000000000000000",
+        "output_repr": "0.0",
+        "safe_state_lock": true
+      },
+      "normative": false,
+      "note": ""
+    }
+  ]
+}
