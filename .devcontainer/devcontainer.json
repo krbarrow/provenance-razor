@@ -1,22 +1,12 @@
 {
   "name": "Provenance Razor Core Development",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {
-    "ghcr.io/devcontainers/features/rust:1": {},
-    "ghcr.io/devcontainers/features/go:1": {},
-    "ghcr.io/devcontainers/features/python:1": {}
-  },
-  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y protobuf-compiler flatbuffers-compiler && pip install pytest base44-encodings",
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y flatbuffers-compiler && pip install cryptography PyYAML grpcio-tools protobuf",
   "customizations": {
     "vscode": {
       "extensions": [
-        "z3.z3-vscode",
-        "z3-solver.z3-solver",
         "redhat.vscode-yaml",
-        "tamasfe.even-better-toml",
-        "zhuangtongfa.Material-theme",
-        "rust-lang.rust-analyzer",
-        "golang.Go"
+        "zhuangtongfa.Material-theme"
       ]
     }
   }
