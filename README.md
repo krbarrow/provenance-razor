@@ -1,3 +1,9 @@
+### The Provenance Razor (Philosophical Foundation)
+
+> **Assertion:** To rely on any assertion whose provenance does not support confidence proportional to the reasonably assessed consequences of its being wrong is a failure of reasoning.
+
+> **Immediate Corollary:** This razor is itself an assertion and subject to its own scrutiny.
+
 # Provenance Razor — specification and conformance suite (v0.3.0-alpha)
 
 ```
