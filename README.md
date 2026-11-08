@@ -48,7 +48,7 @@ tests/
   vectors/scoring_coverage_v0.3.0-alpha.json  EXPERIMENTAL: 39 cases + 18 witnesses
 ```
 
-Requirements: Python 3.9+ with `cryptography` and `PyYAML`. Optional: Node 18+ for the cross-check; `grpcio-tools` + `protobuf` and a `flatc` binary (on PATH or in `$FLATC`) for the transport round trips (each skipped when absent).
+Requirements: Python 3.11+ with `cryptography` and `PyYAML`. Optional: Node 18+ for the cross-check; `grpcio-tools` + `protobuf` and a `flatc` binary (on PATH or in `$FLATC`) for the transport round trips (each skipped when absent).
 
 ```bash
 python tools/generate_vectors.py   # only when the model or the cases change
