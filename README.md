@@ -6,6 +6,8 @@
 
 **Scope.** The razor is not a method for producing assertions. Bayesianism, evidentialism, pragmatism, skepticism and realism all produce assertions; the razor governs whether action or inaction based upon those assertions is justified. Whatever method generated an assertion, a separate analysis is required before relying upon it.
 
+**Time of reliance.** The razor does not reward explanations for eventually being correct; it rewards them for being justified at the time reliance was requested. A justified reliance that turns out wrong is not a failure of the razor; an unjustified one that turns out right is a failure that went unpunished. New provenance opens a new moment of reliance; it does not revise the judgement of an earlier one.
+
 # Provenance Razor — specification and conformance suite (v0.3.0-alpha)
 
 ```
