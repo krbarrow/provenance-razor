@@ -46,7 +46,7 @@ tools/property_tests.py       randomised property tests (P1–P6, P9–P10) and 
 tools/transport_roundtrip.py  canonical -> Protobuf / FlatBuffers -> canonical -> PRC-LP-0 -> verify, + demos
 tools/xcheck.mjs              independent JavaScript re-implementation; checks the same vectors
 docs/CONFORMANCE_ASSUMPTIONS.md   every interpretive choice (A-xx) and spec gap (G-xx)
-docs/RELATED_PRINCIPLES.md        the razor tested against Hanlon, Occam, extraordinary claims, Hitchens
+docs/RELATED_PRINCIPLES.md        the razor tested against Hanlon, Occam, extraordinary claims, Hitchens, crowds
 docs/SCORING_PROFILE_jaccard-v0.1.0-alpha.md   scoring definitions, calibration, findings F-1..F-5
 docs/SCORING_PROFILE_coverage-v0.2.0-alpha.md  coverage mass, properties, proposed rules E-1 / N-1 / P-1
 docs/SCORING_PROFILE_coverage-v0.2.1-alpha.md  P-1 / D-1 profile, exploit-family results

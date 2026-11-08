@@ -145,25 +145,72 @@ Debate and the burden of proof. The heuristic places the burden on the claimant 
 
 ---
 
+## Case 5: The wisdom of crowds
+
+This case was analysed after its prediction was recorded and committed. The test is a consistency check rather than a discovery: the existing literature already names independence as a condition for crowd accuracy (Surowiecki, 2004).
+
+**Prediction recorded before analysis.** The heuristic holds only when the crowd's judgements are independent. Mass media and shared information sources erode that independence, so the razor predicts the heuristic fails where a crowd's judgements trace to common sources, and holds where they are formed separately.
+
+**Heuristic.** The aggregate judgement of many people is often more accurate than that of individual experts.
+
+**What the razor sees.** Crowd aggregation is a method of producing assertions; the razor governs reliance on its output. That output's provenance is the set of individual judgements, and its strength depends on each member having some signal, better than chance, and on the members' errors being independent, so that they cancel.
+
+**Borrowed premises.** Each member's competence; the aggregation rule; the correlation of the members' errors.
+
+### Reproduces
+
+Estimation tasks where people judge separately and each has some signal: Galton's ox-weight competition (1907), where the median of several hundred guesses fell within one per cent of the true weight; guessing the contents of a jar; well-defined, near-term questions in prediction markets. Many independent, weak signals support reliance proportional to what rides on the estimate.
+
+### Predicted failures
+
+1. **Common sources (independence).** Confirms the recorded prediction.
+   - *Lorenz et al. (2011):* participants shown one another's estimates converged; the crowd's accuracy did not improve, but its confidence rose. Knowable at the time: the participants saw each other's answers.
+   - *Salganik, Dodds and Watts (2006):* when listeners could see download counts, which songs succeeded became more unequal and less predictable.
+   - *Shared misconceptions:* asked whether Philadelphia is the capital of Pennsylvania, most respondents answer yes (Prelec, Seung and McCoy, 2017). A misconception taught through common schooling is a common source: errors are correlated, and adding members makes the majority more confidently wrong, the Condorcet jury theorem in reverse.
+2. **Crowds manufactured by an interested party (source lineage).** Sock-puppet accounts, fake reviews, bot-amplified trends, pump-and-dump schemes. Knowable at the time: account ages, coordinated timing, shared origins. The apparent crowd is one source with many faces. The conditions in the crowd literature (diversity, independence, decentralisation, aggregation) describe how a crowd is structured; they do not ask where its members came from. The razor does.
+
+### Outside the razor
+
+**The aggregation rule.** Crowds can fail through arithmetic alone: estimates of large quantities are usually skewed, so the mean is pulled by outliers while the median holds. These failures involve no provenance, and the razor is silent on them. They mark ground outside its reach rather than a further dimension.
+
+### Heuristic superior
+
+- **No track records, plausible independence.** Aggregation does the work without a provenance analysis of each member; the razor adds only a check of the preconditions.
+- **Calibrated probabilities.** Prediction markets produce a magnitude; the razor produces a reliance judgement.
+
+### Scored against the prediction
+
+| | Result |
+|---|---|
+| Recorded prediction | confirmed by three separate lines of evidence (social influence, popularity cascades, shared misconceptions); partly known in advance |
+| Dimensions present | independence (principal), source lineage |
+| New dimension | none |
+| Failures outside the razor | the aggregation rule |
+
+---
+
 ## Synthesis
 
-Across the four cases, the heuristics' failures were not caused by lack of evidence. Where they broke, evidence existed but was mis-accounted: its consequence ignored, its independence assumed, its source unexamined, or its assumptions unsupported.
+Across the five cases, the heuristics' failures were not caused by lack of evidence. Where they broke, evidence existed but was mis-accounted: its consequence ignored, its independence assumed, its source unexamined, its assumptions unsupported, or its age disregarded.
 
 | Dimension | Side of the razor | Cases |
 |---|---|---|
 | Consequence | provenance **required** ("proportional to the consequences of its being wrong") | Hanlon 4; extraordinary claims, low surprise and high consequence; Hitchens 1 |
-| Independence | provenance **available** | Hanlon 3; Curveball |
-| Source lineage (who supplied it, and their interest in it) | provenance **available** | Hanlon 2 |
+| Independence | provenance **available** | Hanlon 3; Curveball; wisdom of crowds 1 |
+| Source lineage (who supplied it, and their interest in it) | provenance **available** | Hanlon 2; wisdom of crowds 2 |
 | Unsupported assumptions | provenance **available** | Occam 3 |
+| Freshness (formed before evidence bearing on it existed; superseded, compromised, revoked or expired) | provenance **available** | Occam 2 (Vulcan); Hanlon 4 (judgement at the moment of reliance) |
 
-The four dimensions are not an extra rule; they unpack the razor's own sentence into the provenance required and three measures of the provenance available. The Provenance Razor then becomes the operational test:
+The five dimensions are not an extra rule; they unpack the razor's own sentence into the provenance required and four measures of the provenance available. The Provenance Razor then becomes the operational test:
 
 > Before relying on an assertion, examine its provenance through those dimensions and calibrate confidence to the consequences of error.
 
 The underlying theory is the repeated appearance of the same provenance failures across otherwise unrelated heuristics.
 
+Freshness weighs whether evidence bearing on an assertion has appeared since it was formed, not age alone. A valid geometry proof from the 1950s loses nothing with time; a 1960s medical recommendation may have been superseded; security guidance can go stale within years. Newer contradicting evidence supersedes older knowledge only when it is itself backed by sufficient provenance: a single unreplicated result does not overturn one replicated for decades.
+
+Some failures lie outside the razor altogether. The aggregation rule in Case 5 is statistical, not a matter of provenance.
+
 ## Open questions
 
-- **Freshness.** Time appears in Occam 2 (Vulcan's provenance decaying as searches failed), in Hanlon 4 (judgement reconstructed at the moment of reliance), and in the specification's expiry and clock-skew vectors. Whether freshness is a fifth dimension or is covered by the other four is undecided.
-- **Selection.** The four heuristics were chosen as supporting principles, not sampled. The dimensions should be tested against heuristics not chosen to fit them, with predictions recorded before each analysis. Candidates: Chesterton's fence, the precautionary principle, the Lindy effect, "if it ain't broke, don't fix it", and the wisdom of crowds.
-- **Recorded prediction, wisdom of crowds.** The heuristic holds only when the crowd's judgements are independent. Mass media and shared information sources erode that independence, so the razor predicts the heuristic fails where a crowd's judgements trace to common sources, and holds where they are formed separately.
+- **Selection.** Cases 1 to 4 were chosen as supporting principles, not sampled; Case 5 was the first analysed after its prediction was recorded. The dimensions should be tested against further heuristics not chosen to fit them, each with its prediction recorded before analysis. Candidates: Chesterton's fence, the precautionary principle, the Lindy effect, and "if it ain't broke, don't fix it".
