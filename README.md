@@ -1,5 +1,13 @@
 ### The Provenance Razor (Philosophical Foundation)
 
+The Provenance Razor is proposed as a foundational principle of justified reliance.
+
+Unlike epistemologies that seek truth, probability, or belief justification, the Provenance Razor concerns the justification of reliance under uncertainty. It applies regardless of whether truth is known, unknowable, or ultimately nonexistent.
+
+Its central claim is that reliance on an assertion requires provenance sufficient to support confidence proportional to the consequences of error.
+
+The Razor is itself subject to this standard. Confidence in the Razor should rise or fall according to the provenance supporting its usefulness, explanatory power, and predictive success.
+
 > **Assertion:** To rely on any assertion whose provenance does not support confidence proportional to the reasonably assessed consequences of its being wrong is a failure of reasoning.
 
 > **Immediate Corollary:** This razor is itself an assertion and subject to its own scrutiny.
@@ -7,6 +15,8 @@
 **Scope.** The razor is not a method for producing assertions. Bayesianism, evidentialism, pragmatism, skepticism and realism all produce assertions; the razor governs whether action or inaction based upon those assertions is justified. Whatever method generated an assertion, a separate analysis is required before relying upon it.
 
 **Time of reliance.** The razor does not reward explanations for eventually being correct; it rewards them for being justified at the time reliance was requested. A justified reliance that turns out wrong is not a failure of the razor; an unjustified one that turns out right is a failure that went unpunished. New provenance opens a new moment of reliance; it does not revise the judgement of an earlier one.
+
+**Temporal validity.** Provenance is not permanent. All provenance remains contingent upon the continued validity of the assertions it rests on, and may be revised or revoked by later information: it can be superseded by newer evidence, compromised when its own basis proves invalid, revoked by explicit withdrawal, or expire by design. Reliance justified yesterday may be unjustified today. An assertion can have excellent provenance and still deserve reduced reliance because it was formed before relevant evidence existed. What matters is whether evidence bearing on the assertion has appeared since, not age alone: a valid geometry proof from the 1950s loses nothing with time; a 1960s medical recommendation or 1950s physics may have been superseded; security guidance can go stale within years, valid when published and unsafe now. Newer contradicting evidence supersedes older knowledge only when it is itself backed by sufficient provenance. The specification implements this for its own objects: provenance attestations and family manifests are checked for revocation, authorised key epochs and expiry (§2.4, §2.6), the trust state binds the revocation sets in force (§2.7), and decision capabilities expire within a bounded window (§3.5).
 
 **Evidence standard.** The Provenance Razor is supported only insofar as it successfully reproduces the useful conclusions of existing heuristics, predicts their failure conditions, and identifies domains where they remain superior. The cases so far are in [docs/RELATED_PRINCIPLES.md](docs/RELATED_PRINCIPLES.md).
 
