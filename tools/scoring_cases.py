@@ -281,13 +281,51 @@ EXP_INPUTS = [0.0, -0.0, 1.0, -1.0, 0.5, -0.5, 1e-300, -1e-300, math.log(2), -ma
               700.0, 709.0, 709.5, math.inf, -math.inf, math.nan]
 
 
+# Published libm exp() bits for EXP_INPUTS, informative only (the normative value is prc_exp). Frozen from the
+# committed 0.3.0-alpha vectors so regeneration doesn't depend on the host's libm (glibc 2.41, for one, returns
+# ...f576 for -27.046689406673504). check_vectors.py reports where the host's libm differs.
+PUBLISHED_LIBM_EXP_BITS = {
+    "0000000000000000": "3ff0000000000000",  # 0.0
+    "8000000000000000": "3ff0000000000000",  # -0.0
+    "3ff0000000000000": "4005bf0a8b145769",  # 1.0
+    "bff0000000000000": "3fd78b56362cef38",  # -1.0
+    "3fe0000000000000": "3ffa61298e1e069c",  # 0.5
+    "bfe0000000000000": "3fe368b2fc6f960a",  # -0.5
+    "01a56e1fc2f8f359": "3ff0000000000000",  # 1e-300
+    "81a56e1fc2f8f359": "3ff0000000000000",  # -1e-300
+    "3fe62e42fefa39ef": "4000000000000000",  # 0.6931471805599453
+    "bfe62e42fefa39ef": "3fe0000000000000",  # -0.6931471805599453
+    "bfd7a5e353f7ced9": "3fe61d5359fc72ec",  # -0.3695
+    "bfc7a5e353f7ced9": "3fea9a1bcdb65856",  # -0.18475
+    "c00628f5c28f5c29": "3fb00a9dfd11c093",  # -2.77
+    "bffd525460aa64c3": "3fc47ac866bb3ff3",  # -1.8326
+    "bfbb98c7e28240b8": "3fecbad60a0005bb",  # -0.1078
+    "bf9613d31b9b66f9": "3fef514555085f8f",  # -0.02156
+    "c03b0bf3d642bb7b": "3d7f8e852733f577",  # -27.046689406673504
+    "c044000000000000": "3c539792499b1a24",  # -40.0
+    "c059000000000000": "36ea8c1f14e2af5d",  # -100.0
+    "c085e00000000000": "00d14f2b0fb9307f",  # -700.0
+    "c086240000000000": "000e6cf6d08897ac",  # -708.5
+    "c086280000000000": "0008bfe55de02338",  # -709.0
+    "c087400000000000": "0000000000000002",  # -744.0
+    "c087480000000000": "0000000000000001",  # -745.0
+    "c08748cccccccccd": "0000000000000001",  # -745.1
+    "c08f400000000000": "0000000000000000",  # -1000.0
+    "4085e00000000000": "7f0d945df4f8ec8e",  # 700.0
+    "4086280000000000": "7fdd422d2be5dc9b",  # 709.0
+    "40862c0000000000": "7fe81e9b4b52d0c9",  # 709.5
+    "7ff0000000000000": "7ff0000000000000",  # inf
+    "fff0000000000000": "0000000000000000",  # -inf
+    "7ff8000000000000": "7ff8000000000000",  # nan
+}
+
+
 def exp_vectors():
     out = []
     for x in EXP_INPUTS:
         y = P.prc_exp(x)
-        lib = math.exp(x) if x < 709.78 else math.inf
         out.append({"input_bits": hx(x), "input_repr": repr(x), "expected_bits": hx(y), "expected_repr": repr(y),
-                    "libm_exp_bits_informative": hx(lib) if not math.isnan(x) else hx(x)})
+                    "libm_exp_bits_informative": PUBLISHED_LIBM_EXP_BITS[hx(x)]})
     return out
 
 
