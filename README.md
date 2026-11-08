@@ -18,6 +18,12 @@ The Razor is itself subject to this standard. Confidence in the Razor should ris
 
 **Temporal validity.** Provenance is not permanent. All provenance remains contingent upon the continued validity of the assertions it rests on, and may be revised or revoked by later information: it can be superseded by newer evidence, compromised when its own basis proves invalid, revoked by explicit withdrawal, or expire by design. Reliance justified yesterday may be unjustified today. An assertion can have excellent provenance and still deserve reduced reliance because it was formed before relevant evidence existed. What matters is whether evidence bearing on the assertion has appeared since, not age alone: a valid geometry proof from the 1950s loses nothing with time; a 1960s medical recommendation or 1950s physics may have been superseded; security guidance can go stale within years, valid when published and unsafe now. Newer contradicting evidence supersedes older knowledge only when it is itself backed by sufficient provenance. The specification implements this for its own objects: provenance attestations and family manifests are checked for revocation, authorised key epochs and expiry (§2.4, §2.6), the trust state binds the revocation sets in force (§2.7), and decision capabilities expire within a bounded window (§3.5).
 
+**Cost of analysis.** Examining provenance is itself an action with consequences, and by the corollary it is subject to the razor. The total risk of relying after analysis of depth $d$ is
+
+$$\text{Total Risk}(d) = P(\text{Error} \mid d) \times \text{Cost}(\text{Error}) + \text{Cost}(\text{Analysis}(d))$$
+
+Analysis is warranted while a further step reduces the expected cost of error by more than the step costs. Low stakes therefore warrant little analysis, and a cheap heuristic can be the proportionate one. Testing is how provenance is acquired, so the same rule orders tests: in decreasing ratio of the probability that a test settles the question to its cost.
+
 **Evidence standard.** The Provenance Razor is supported only insofar as it successfully reproduces the useful conclusions of existing heuristics, predicts their failure conditions, and identifies domains where they remain superior. The cases so far are in [docs/RELATED_PRINCIPLES.md](docs/RELATED_PRINCIPLES.md).
 
 # Provenance Razor — specification and conformance suite (v0.3.0-alpha)

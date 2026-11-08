@@ -10,7 +10,9 @@ Each case records:
 - **borrowed premises**: inputs the razor takes from outside itself, each needing its own provenance;
 - **reproduces**: situations where the razor reaches the heuristic's conclusion;
 - **predicted failures**: situations where the razor predicts the heuristic goes wrong, each with an example;
-- **heuristic superior**: ground the heuristic keeps.
+- **heuristic superior**: ground the heuristic keeps, where it gives a different kind of answer from the razor.
+
+The razor counts the cost of its own analysis: the analysis is itself an action, and by the corollary it is subject to the razor (README, Cost of analysis). Where a heuristic is the proportionate analysis for low stakes, the razor reproduces it at the same cost; that is recorded under **reproduces**, not as ground the heuristic keeps.
 
 Examples are judged by what was **knowable at the time** reliance was requested, recorded before the outcome. The razor does not reward explanations for eventually being correct; a justified reliance that turned out wrong does not count against it, and an unjustified one that turned out right does not count for it.
 
@@ -39,9 +41,9 @@ High stakes with an adversary present: wrongly accepting "mistake" becomes expen
 3. **"Mistakes" that all point the same way.** Genuine errors are random; deliberate ones consistently benefit someone. A run of errors with one beneficiary behaves like one lineage, not several independent ones.
 4. **Missed malice costs far more than a false accusation.** *Stuxnet:* centrifuge failures at Natanz were reportedly attributed to faulty equipment and operator error before sabotage was understood. Knowable at the time: a sanctioned nuclear programme with capable, known adversaries, a knowably adversarial setting in which the cost of missed sabotage was foreseeable. "Equipment failure" therefore needed strong provenance, such as verified root causes for repeated failures, not a plausible account.
 
-### Heuristic superior
+### Reproduces at the same cost
 
-Everyday interpersonal judgement. Hanlon's razor costs a second; a provenance analysis costs far more, and false accusations of malice do lasting damage regardless of the truth. The heuristic wins on cost of analysis, which the razor does not measure.
+Everyday interpersonal judgement. Hanlon's razor costs a second, and false accusations of malice do lasting damage regardless of the truth. With low stakes, the provenance required is low and the base rate meets it at once, so the proportionate analysis is the one-second check. The razor reaches Hanlon's conclusion at Hanlon's cost; the heuristic is the razor's answer for low stakes, worked out in advance.
 
 ---
 
@@ -75,11 +77,14 @@ Two explanations fit the facts, and the larger one's extra assumptions have no i
 
 3. **Simplicity claimed through a single overpowered root.** "One actor explains everything" sounds simpler than many separate causes. The razor asks for provenance of that actor's capabilities, access and coordination. One root that needs unsupported powers is weaker, not simpler. Occam's razor can be invoked for such explanations; the razor cannot.
 
+### Reproduces: choosing what to test first
+
+Testing is how provenance is acquired, so test order falls under the cost of analysis. The expected cost of a sequence of tests is minimised by testing in decreasing order of the probability that a test settles the question divided by its cost. A test costing $10 with a 1% chance of settling the question, against one costing $100 with a 99% chance: testing the cheap one first has an expected cost of $10 + 0.99 × $100 = $109; testing the expensive one first, $100 + 0.01 × $10 = $100.10. Cheapest first is right only when the probabilities are comparable. The probabilities are a borrowed premise from the method that produced the hypotheses. Occam's preference for the simpler hypothesis is a rough estimate of that ratio, since simpler hypotheses are often both cheaper to test and more likely.
+
 ### Heuristic superior
 
 - **Equally well-supported explanations.** The razor is silent; parsimony breaks the tie.
 - **Statistical model selection.** Among models fitted to the same data, simpler models tend to generalise better. This is a property of estimation, not provenance.
-- **Choosing what to test first.** Simpler hypotheses are often cheaper to test. That is the production of assertions, outside the razor's scope.
 
 ---
 
@@ -118,7 +123,7 @@ The variables are separable, not uncorrelated. Surprising claims are often conse
 ### Heuristic superior
 
 - **Quantified discovery claims.** Where priors and likelihoods can be stated, as in particle physics' five-sigma convention, the heuristic's Bayesian form says how much evidence is needed. The razor says only whether the reliance threshold is met.
-- **Surprise as a cheap error signal.** A result contradicting strong prior knowledge is more likely a measurement error than a discovery. The heuristic encodes that at almost no cost; the razor sees it only if the error rate is expressed as provenance.
+- **Surprise as an error signal.** A result contradicting strong prior knowledge is more likely a measurement error than a discovery. That inference from surprise to probable error is the heuristic's own; the razor sees it only if the error rate is expressed as provenance.
 
 ---
 
@@ -139,9 +144,13 @@ Unsourced claims whose wrongful dismissal costs little: rumours, spam, unsupport
 1. **Wrongful dismissal is costly.** An unverified warning of serious harm: an anonymous bomb threat, a reported gas smell, an unconfirmed breach report. Knowable at the time: nothing supports the claim, and nothing supports its negation. Dismissal relies on "this is false", which has no provenance and severe consequences if wrong. Neither belief nor dismissal is justified; cheap verification or precaution is. Established threat-response and gas-leak procedures already act this way.
 2. **Provenance without presented evidence.** A source with a strong track record warns without supplying evidence. Read narrowly, the heuristic permits dismissal; the razor counts the track record as provenance, which can justify at least a check. If "evidence" includes track record, the two agree; the case turns on that definition.
 
+### Reproduces at the same cost
+
+Debate and the burden of proof. The heuristic places the burden on the claimant at almost no cost, and protects against unsupported claims arriving faster than they can be refuted and against demands to disprove the undisprovable. In low-stakes discussion that default is the proportionate analysis, so the razor reproduces it at the same cost.
+
 ### Heuristic superior
 
-Debate and the burden of proof. The heuristic places the burden on the claimant at almost no cost, and protects against unsupported claims arriving faster than they can be refuted and against demands to disprove the undisprovable. In low-stakes discussion it wins on cost of analysis.
+None identified.
 
 ---
 
@@ -169,13 +178,16 @@ Estimation tasks where people judge separately and each has some signal: Galton'
    - *Shared misconceptions:* asked whether Philadelphia is the capital of Pennsylvania, most respondents answer yes (Prelec, Seung and McCoy, 2017). A misconception taught through common schooling is a common source: errors are correlated, and adding members makes the majority more confidently wrong, the Condorcet jury theorem in reverse.
 2. **Crowds manufactured by an interested party (source lineage).** Sock-puppet accounts, fake reviews, bot-amplified trends, pump-and-dump schemes. Knowable at the time: account ages, coordinated timing, shared origins. The apparent crowd is one source with many faces. The conditions in the crowd literature (diversity, independence, decentralisation, aggregation) describe how a crowd is structured; they do not ask where its members came from. The razor does.
 
+### Reproduces at the same cost
+
+No track records, plausible independence: aggregation does the work without a provenance analysis of each member. The proportionate analysis is a check of the preconditions, so the razor relies on the aggregate at the heuristic's cost.
+
 ### Outside the razor
 
 **The aggregation rule.** Crowds can fail through arithmetic alone: estimates of large quantities are usually skewed, so the mean is pulled by outliers while the median holds. These failures involve no provenance, and the razor is silent on them. They mark ground outside its reach rather than a further dimension.
 
 ### Heuristic superior
 
-- **No track records, plausible independence.** Aggregation does the work without a provenance analysis of each member; the razor adds only a check of the preconditions.
 - **Calibrated probabilities.** Prediction markets produce a magnitude; the razor produces a reliance judgement.
 
 ### Scored against the prediction
@@ -210,6 +222,8 @@ The underlying theory is the repeated appearance of the same provenance failures
 Freshness weighs whether evidence bearing on an assertion has appeared since it was formed, not age alone. A valid geometry proof from the 1950s loses nothing with time; a 1960s medical recommendation may have been superseded; security guidance can go stale within years. Newer contradicting evidence supersedes older knowledge only when it is itself backed by sufficient provenance: a single unreplicated result does not overturn one replicated for decades.
 
 Some failures lie outside the razor altogether. The aggregation rule in Case 5 is statistical, not a matter of provenance.
+
+Counting the cost of analysis narrows the ground where heuristics remain superior to a single kind: cases where a heuristic gives a different kind of answer from the razor's reliance judgement. Those are a magnitude (quantified discovery thresholds, calibrated probabilities), a tie-break between equally supported explanations, an estimation property (model selection), or an inference the razor does not make (surprise as a sign of error). Where a heuristic is merely cheaper, the razor reproduces it at the same cost, because the proportionate analysis for low stakes is cheap.
 
 ## Open questions
 
