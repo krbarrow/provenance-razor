@@ -8,6 +8,8 @@
 
 **Time of reliance.** The razor does not reward explanations for eventually being correct; it rewards them for being justified at the time reliance was requested. A justified reliance that turns out wrong is not a failure of the razor; an unjustified one that turns out right is a failure that went unpunished. New provenance opens a new moment of reliance; it does not revise the judgement of an earlier one.
 
+**Evidence standard.** The Provenance Razor is supported only insofar as it successfully reproduces the useful conclusions of existing heuristics, predicts their failure conditions, and identifies domains where they remain superior.
+
 # Provenance Razor — specification and conformance suite (v0.3.0-alpha)
 
 ```
