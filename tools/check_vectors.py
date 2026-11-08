@@ -14,6 +14,7 @@ from __future__ import annotations
 import filecmp
 import hashlib
 import json
+import math
 import os
 import struct
 import sys
@@ -225,8 +226,14 @@ def check_scoring(tests):
     profiles = {k: v["declaration"] for k, v in doc["profiles"].items()}
     for k, v in doc["profiles"].items():
         check(R.H(v["declaration"]) == v["fingerprint"], f"scoring: profile {k} fingerprint")
+    libm_differs = 0
     for x in doc["prc_exp_v1"]["vectors"]:
         check(P.hx(P.prc_exp(P.f(x["input_bits"]))) == x["expected_bits"], f"scoring: prc_exp({x['input_repr']})")
+        v = P.f(x["input_bits"])
+        if not math.isnan(v) and P.hx(math.exp(v) if v < 709.78 else math.inf) != x["libm_exp_bits_informative"]:
+            libm_differs += 1
+    print(f"scoring: host math.exp differs from the published libm reference on {libm_differs} of "
+          f"{len(doc['prc_exp_v1']['vectors'])} inputs (informative; prc_exp is normative)")
     by_id = {}
     for c in doc["cases"]:
         tr = P.evaluate(c["input"]["request"], c["input"]["families"], profiles[c["profile"]])
@@ -404,6 +411,9 @@ def main():
     }
     check_transport()
     check_determinism(tests)
+    root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    check(filecmp.cmp(os.path.join(root, "SPECIFICATION.md"), os.path.join(root, "spec", "PROVENANCE_RAZOR_SPEC.md"),
+                      shallow=False), "spec: SPECIFICATION.md differs from spec/PROVENANCE_RAZOR_SPEC.md (normative)")
     print("vectors:", ", ".join(f"{k}={v}" for k, v in counts.items()))
     print(COUNT.get("transport", ""))
     print(f"checks run: {COUNT['checks']}, failures: {len(FAIL)}")

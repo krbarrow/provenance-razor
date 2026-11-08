@@ -1,0 +1,45 @@
+# Runs the README's checks on every push and PR, so the evidence the spec header claims stays current.
+name: conformance
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  vectors:
+    name: check_vectors (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install cryptography PyYAML
+      - run: python tools/check_vectors.py
+
+  cross-runtime:
+    name: xcheck, property tests, transport round trips
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: sudo apt-get update && sudo apt-get install -y flatbuffers-compiler
+      - run: pip install cryptography PyYAML grpcio-tools protobuf
+      - run: node tools/xcheck.mjs
+      - run: python tools/property_tests.py
+      - name: transport round trips (must not skip)
+        run: |
+          python tools/transport_roundtrip.py | tee transport.log
+          ! grep -q SKIPPED transport.log
