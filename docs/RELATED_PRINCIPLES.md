@@ -211,7 +211,7 @@ Across the five cases, the heuristics' failures were not caused by lack of evide
 | Independence | provenance **available** | Hanlon 3; Curveball; wisdom of crowds 1 |
 | Source lineage (who supplied it, and their interest in it) | provenance **available** | Hanlon 2; wisdom of crowds 2 |
 | Unsupported assumptions | provenance **available** | Occam 3 |
-| Freshness (formed before evidence bearing on it existed; superseded, compromised, revoked or expired) | provenance **available** | Occam 2 (Vulcan); Hanlon 4 (judgement at the moment of reliance) |
+| Temporal validity (formed before evidence bearing on it existed; superseded, compromised, revoked or expired) | provenance **available** | Occam 2 (Vulcan); Hanlon 4 (judgement at the moment of reliance) |
 
 The five dimensions are not an extra rule; they unpack the razor's own sentence into the provenance required and four measures of the provenance available. The Provenance Razor then becomes the operational test:
 
@@ -219,7 +219,7 @@ The five dimensions are not an extra rule; they unpack the razor's own sentence 
 
 The underlying theory is the repeated appearance of the same provenance failures across otherwise unrelated heuristics.
 
-Freshness weighs whether evidence bearing on an assertion has appeared since it was formed, not age alone. A valid geometry proof from the 1950s loses nothing with time; a 1960s medical recommendation may have been superseded; security guidance can go stale within years. Newer contradicting evidence supersedes older knowledge only when it is itself backed by sufficient provenance: a single unreplicated result does not overturn one replicated for decades.
+Temporal validity weighs whether evidence bearing on an assertion has appeared since it was formed, not age alone. A valid geometry proof from the 1950s loses nothing with time; a 1960s medical recommendation may have been superseded; security guidance can go stale within years. Newer contradicting evidence supersedes older knowledge only when it is itself backed by sufficient provenance: a single unreplicated result does not overturn one replicated for decades.
 
 Some failures lie outside the razor altogether. The aggregation rule in Case 5 is statistical, not a matter of provenance.
 
