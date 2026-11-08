@@ -156,7 +156,7 @@ None identified.
 
 ## Case 5: The wisdom of crowds
 
-This case was analysed after its prediction was recorded and committed. The test is a consistency check rather than a discovery: the existing literature already names independence as a condition for crowd accuracy (Surowiecki, 2004).
+This case was analysed after its prediction was recorded. The prediction and the analysis were committed together, so the order rests on this statement, not on the repository history; later cases commit the prediction separately first. The test is a consistency check rather than a discovery: the existing literature already names independence as a condition for crowd accuracy (Surowiecki, 2004).
 
 **Prediction recorded before analysis.** The heuristic holds only when the crowd's judgements are independent. Mass media and shared information sources erode that independence, so the razor predicts the heuristic fails where a crowd's judgements trace to common sources, and holds where they are formed separately.
 
@@ -211,7 +211,7 @@ Across the five cases, the heuristics' failures were not caused by lack of evide
 | Independence | provenance **available** | Hanlon 3; Curveball; wisdom of crowds 1 |
 | Source lineage (who supplied it, and their interest in it) | provenance **available** | Hanlon 2; wisdom of crowds 2 |
 | Unsupported assumptions | provenance **available** | Occam 3 |
-| Temporal validity (formed before evidence bearing on it existed; superseded, compromised, revoked or expired) | provenance **available** | Occam 2 (Vulcan); Hanlon 4 (judgement at the moment of reliance) |
+| Temporal validity (formed before evidence bearing on it existed; superseded, compromised, revoked or expired) | provenance **available** | Occam 2 (Vulcan) |
 
 The five dimensions are not an extra rule; they unpack the razor's own sentence into the provenance required and four measures of the provenance available. The Provenance Razor then becomes the operational test:
 
@@ -227,4 +227,4 @@ Counting the cost of analysis narrows the ground where heuristics remain superio
 
 ## Open questions
 
-- **Selection.** Cases 1 to 4 were chosen as supporting principles, not sampled; Case 5 was the first analysed after its prediction was recorded. The dimensions should be tested against further heuristics not chosen to fit them, each with its prediction recorded before analysis. Candidates: Chesterton's fence, the precautionary principle, the Lindy effect, and "if it ain't broke, don't fix it".
+- **Selection.** Cases 1 to 4 were chosen as supporting principles, not sampled; Case 5 was the first analysed after its prediction was recorded. The dimensions should be tested against further heuristics not chosen to fit them, each with its prediction recorded and committed before the analysis is written. Candidates: Chesterton's fence, the precautionary principle, the Lindy effect, and "if it ain't broke, don't fix it".
