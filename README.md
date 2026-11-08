@@ -8,7 +8,7 @@
 
 **Time of reliance.** The razor does not reward explanations for eventually being correct; it rewards them for being justified at the time reliance was requested. A justified reliance that turns out wrong is not a failure of the razor; an unjustified one that turns out right is a failure that went unpunished. New provenance opens a new moment of reliance; it does not revise the judgement of an earlier one.
 
-**Evidence standard.** The Provenance Razor is supported only insofar as it successfully reproduces the useful conclusions of existing heuristics, predicts their failure conditions, and identifies domains where they remain superior.
+**Evidence standard.** The Provenance Razor is supported only insofar as it successfully reproduces the useful conclusions of existing heuristics, predicts their failure conditions, and identifies domains where they remain superior. The cases so far are in [docs/RELATED_PRINCIPLES.md](docs/RELATED_PRINCIPLES.md).
 
 # Provenance Razor — specification and conformance suite (v0.3.0-alpha)
 
@@ -36,6 +36,7 @@ tools/property_tests.py       randomised property tests (P1–P6, P9–P10) and 
 tools/transport_roundtrip.py  canonical -> Protobuf / FlatBuffers -> canonical -> PRC-LP-0 -> verify, + demos
 tools/xcheck.mjs              independent JavaScript re-implementation; checks the same vectors
 docs/CONFORMANCE_ASSUMPTIONS.md   every interpretive choice (A-xx) and spec gap (G-xx)
+docs/RELATED_PRINCIPLES.md        the razor tested against Hanlon, Occam, extraordinary claims, Hitchens
 docs/SCORING_PROFILE_jaccard-v0.1.0-alpha.md   scoring definitions, calibration, findings F-1..F-5
 docs/SCORING_PROFILE_coverage-v0.2.0-alpha.md  coverage mass, properties, proposed rules E-1 / N-1 / P-1
 docs/SCORING_PROFILE_coverage-v0.2.1-alpha.md  P-1 / D-1 profile, exploit-family results
