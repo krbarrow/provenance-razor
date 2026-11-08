@@ -411,6 +411,9 @@ def main():
     }
     check_transport()
     check_determinism(tests)
+    root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    check(filecmp.cmp(os.path.join(root, "SPECIFICATION.md"), os.path.join(root, "spec", "PROVENANCE_RAZOR_SPEC.md"),
+                      shallow=False), "spec: SPECIFICATION.md differs from spec/PROVENANCE_RAZOR_SPEC.md (normative)")
     print("vectors:", ", ".join(f"{k}={v}" for k, v in counts.items()))
     print(COUNT.get("transport", ""))
     print(f"checks run: {COUNT['checks']}, failures: {len(FAIL)}")
