@@ -4,6 +4,8 @@
 
 > **Immediate Corollary:** This razor is itself an assertion and subject to its own scrutiny.
 
+**Scope.** The razor is not a method for producing assertions. Bayesianism, evidentialism, pragmatism, skepticism and realism all produce assertions; the razor governs whether action or inaction based upon those assertions is justified. Whatever method generated an assertion, a separate analysis is required before relying upon it.
+
 # Provenance Razor — specification and conformance suite (v0.3.0-alpha)
 
 ```
